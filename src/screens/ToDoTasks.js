@@ -4,31 +4,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TaskListView } from '../components/Components';
 import { readTasksFromFirebaseAsync } from '../services/FirebaseApi';
 
-const imgChecList = require('../assets/checklist.png');
+const imgCheckList = require('../assets/checklist.png');
 const imgPlus = require('../assets/plus.png');
 
 export default class ToDoTasks extends Component {
-    
+
     state = {
-        tasks: []
-    }
-
-
-    _goToTask() {
-        this.props.navigation.navigate('Task');
-    }
-
-    render() {
-        return (
-            <View style={StyleSheet.container}>
-                <TaskListView tasks={this.state.tasks} />
-                <TouchableOpacity style={styles.floatingButton}
-                    onPress={() => this._goToTask()}>
-                        <Image source={imgPlus} style={styles.image} />
-                    </TouchableOpacity>
-            </View>
-        );
-    }
+        tasks: [],
+    };
 
     componentDidMount() {
         readTasksFromFirebaseAsync(this._fetchTasks.bind(this));
@@ -37,6 +20,22 @@ export default class ToDoTasks extends Component {
     _fetchTasks(tasks) {
         const tasksToDo = tasks.filter(t => !t.isDone);
         this.setState({ tasks: tasksToDo });
+    }
+
+    _goToTask() {
+        this.props.navigation.navigate('Task');
+    }
+
+    render() {
+        return (
+            <View style={StyleSheet.container}>
+                <TaskListView tasks={this.state.tasks}  navigation={this.props.navigation} />
+                <TouchableOpacity style={styles.floatingButton}
+                    onPress={() => this._goToTask()}>
+                        <Image source={imgPlus} style={styles.image} />
+                    </TouchableOpacity>
+            </View>
+        );
     }
 
 }
